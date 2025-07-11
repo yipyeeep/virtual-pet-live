@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from 'react';
-import io, { Socket } from 'socket.io-client';
+import io from 'socket.io-client';
 
 type PetState = {
   happiness: number;
@@ -136,7 +136,7 @@ export default function PetDashboard() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>🐾 Virtual Pet Livestream</h1>
+      <h1>🐾 Virtual Pet Live Dashboard</h1>
       
       <div style={{ 
         display: 'grid', 
