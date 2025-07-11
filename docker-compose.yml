@@ -12,51 +12,44 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - REDIS_URL=redis://redis:6379
+      - REDIS_URL=${REDIS_URL}
       - PORT=8080
     depends_on:
       - redis
-    volumes:
-      - ./websocket-server:/app
-      - /app/node_modules
 
   pet-dashboard:
-    build: ./pet-dashboard
+    build: 
+      context: ./pet-dashboard
+      args:
+        - NEXT_PUBLIC_WS_URL=${WS_URL}
+        - NODE_ENV=${NODE_ENV}
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_WS_URL=http://localhost:8080
-      - REDIS_URL=redis://redis:6379
+      - NEXT_PUBLIC_WS_URL=${WS_URL}
+      - REDIS_URL=${REDIS_URL}
+      - NODE_ENV=${NODE_ENV}
     depends_on:
       - redis
       - websocket-server
-    volumes:
-      - ./pet-dashboard:/app
-      - /app/node_modules
-      - /app/.next
-    working_dir: /app
 
   pet-bot:
     build: ./pet-bot
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
-      - REDIS_URL=redis://redis:6379
+      - REDIS_URL=${REDIS_URL}
+      - NODE_ENV=${NODE_ENV}
     depends_on:
       - redis
-    volumes:
-      - ./pet-bot:/app
-      - /app/node_modules
 
   # Pet behavior engine (runs autonomous updates every minute)
   pet-engine:
     build: ./pet-engine
     environment:
-      - REDIS_URL=redis://redis:6379
+    - REDIS_URL=${REDIS_URL}
+    - NODE_ENV=${NODE_ENV}
     depends_on:
-      - redis
-    volumes:
-      - ./pet-engine:/app
-      - /app/node_modules
+    - redis
 
 volumes:
   redis_data:

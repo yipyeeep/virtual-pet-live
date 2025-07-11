@@ -1,0 +1,22 @@
+services:
+  pet-dashboard:
+    build: 
+      context: ./pet-dashboard
+      args:
+        - NEXT_PUBLIC_WS_URL=${WS_URL}
+        - NODE_ENV=${NODE_ENV}
+    environment:
+      - NEXT_PUBLIC_WS_URL=${WS_URL}
+      - NODE_ENV=${NODE_ENV}
+      
+  websocket-server:
+    environment:
+      - NODE_ENV=production
+      
+  pet-bot:
+    environment:
+      - NODE_ENV=production
+      
+  pet-engine:
+    environment:
+      - NODE_ENV=production

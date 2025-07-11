@@ -27,7 +27,14 @@ export default function PetDashboard() {
 
   // Socket.IO connection
   useEffect(() => {
-    const socket = io(process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:8080');
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
+  if (!wsUrl) {
+    console.error('NEXT_PUBLIC_WS_URL is not defined');
+    setConnectionStatus('Configuration Error');
+    return;
+  }
+  
+  const socket = io(wsUrl);
 
     socket.on('connect', () => {
       setConnectionStatus('Connected');

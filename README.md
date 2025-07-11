@@ -30,7 +30,14 @@ set up .env with bot token
 # Fill in Discord/Redis/AI keys  
 
 # 3. Run with Docker  
-docker-compose up -d --build  
+## Development (uses .env + override automatically)
+docker-compose up
+
+## Production (explicit files)
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production up --build
+
+## Staging
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.staging up
 
 Access:
 
