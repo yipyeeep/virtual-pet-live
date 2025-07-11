@@ -7,7 +7,17 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/engine.js",
+    "dev": "ts-node src/engine.ts"
+  },
   "dependencies": {
     "redis": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^5.0.0"
   }
 }

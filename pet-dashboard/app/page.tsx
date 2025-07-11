@@ -148,8 +148,7 @@ export default function PetDashboard() {
         <div style={{ 
           border: '2px solid #ccc', 
           borderRadius: '10px', 
-          padding: '20px',
-          backgroundColor: '#fff'
+          padding: '20px'
         }}>
           <h2>Live Pet View</h2>
           <canvas 
@@ -167,8 +166,8 @@ export default function PetDashboard() {
         <div style={{ 
           border: '2px solid #ccc', 
           borderRadius: '10px', 
-          padding: '20px',
-          backgroundColor: '#fff'
+          backgroundColor: '#322',
+          padding: '20px'
         }}>
           <h2>Pet Stats</h2>
           <div style={{ fontSize: '18px', lineHeight: '1.6' }}>
@@ -185,8 +184,7 @@ export default function PetDashboard() {
           {/* Happiness Bar */}
           <div style={{ 
             width: '100%', 
-            height: '20px', 
-            backgroundColor: '#eee', 
+            height: '20px',
             borderRadius: '10px',
             overflow: 'hidden',
             marginTop: '15px'
@@ -205,15 +203,13 @@ export default function PetDashboard() {
       <div style={{ 
         border: '2px solid #ccc', 
         borderRadius: '10px', 
-        padding: '20px',
-        backgroundColor: '#fff'
+        padding: '20px'
       }}>
         <h2>Activity Log</h2>
         <div style={{ 
           maxHeight: '200px', 
           overflowY: 'auto',
           padding: '10px',
-          backgroundColor: '#f9f9f9',
           borderRadius: '5px'
         }}>
           {events.length > 0 ? (
@@ -222,7 +218,6 @@ export default function PetDashboard() {
                 <li key={i} style={{ 
                   marginBottom: '5px',
                   padding: '5px',
-                  backgroundColor: '#fff',
                   borderRadius: '3px',
                   fontSize: '14px'
                 }}>
