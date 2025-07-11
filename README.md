@@ -64,3 +64,7 @@ MIT © [HongYipCheng]
 1. **Demo Media**: Replace placeholder GIF with actual screenshots/videos.  
 2. **Environment Setup**: Add specific API key instructions (Discord bot token, OpenAI, etc.).  
 3. **Roadmap**: Optional "Planned Features" section to attract contributors.  
+
+### Notes of deployment for self
+1. docker-compose.yml: - NEXT_PUBLIC_WS_URL=http://websocket-server:8080 -> - NEXT_PUBLIC_WS_URL=http://localhost:8080
+2. pet-dashboard/Dockerfile: CMD ["npm", "start"] -> CMD ["npm", "run", "dev"]

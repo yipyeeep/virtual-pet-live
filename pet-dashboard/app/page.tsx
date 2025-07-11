@@ -39,7 +39,7 @@ export default function PetDashboard() {
       setEvents(prev => [...prev, 'Disconnected from pet stream']);
     });
 
-    socket.on('quiz_event', (data: PetEvent) => {
+    socket.on('pet_update', (data: PetEvent) => {
       if (data.type === 'PET_STATE_UPDATE' && data.state) {
         setPetState(data.state);
         setEvents(prev => [...prev, `Pet ${data.state?.activity}: happiness ${data.state?.happiness}/100`]);
@@ -178,7 +178,9 @@ export default function PetDashboard() {
               </span>
             </p>
             <p><strong>Activity:</strong> {petState.activity}</p>
-            <p><strong>Last Update:</strong> {new Date(petState.lastUpdate).toLocaleString()}</p>
+            <p suppressHydrationWarning>
+              <strong>Last Update:</strong> {new Date(petState.lastUpdate).toLocaleString()}
+            </p>
           </div>
           
           {/* Happiness Bar */}

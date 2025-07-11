@@ -22,6 +22,10 @@ interface ErrorMessage {
 
 type RedisMessage = PetUpdate | ErrorMessage;
 
+// Pet state management
+const PET_STATE_KEY = 'pet:state';
+const PET_CHANNEL = 'pet_updates';
+
 // Create HTTP server
 const server = http.createServer();
 
@@ -42,7 +46,7 @@ const redisSubscriber = redis.createClient({
 redisSubscriber.connect().then(() => {
   console.log('Redis subscriber connected');
   
-  redisSubscriber.subscribe('test_channel', (message: string) => {
+  redisSubscriber.subscribe(PET_CHANNEL, (message: string) => {
     console.log('Redis ->', message);
     
     // Parse JSON message
@@ -55,7 +59,7 @@ redisSubscriber.connect().then(() => {
     }
     
     // Broadcast to all Socket.IO clients
-    io.emit('quiz_event', parsedMessage);
+    io.emit('pet_update', parsedMessage);
   });
 }).catch((err: Error) => {
   console.error('Redis connection error:', err);
