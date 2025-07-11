@@ -26,7 +26,7 @@ bash
 git clone https://github.com/your-repo/ai-virtual-pet.git  
 
 # 2. Set up environment  
-cp .env.example .env  
+set up .env with bot token
 # Fill in Discord/Redis/AI keys  
 
 # 3. Run with Docker  
