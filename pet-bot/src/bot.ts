@@ -1,5 +1,5 @@
 // src/bot.ts
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import { Client, GatewayIntentBits, SlashCommandBuilder, REST, Routes } from 'discord.js';
 import { createClient } from 'redis';
 import { PetState, PetUpdate } from './types/pet';

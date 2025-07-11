@@ -1,0 +1,58 @@
+# dependencies
+**/node_modules/
+**/npm-debug.log*
+**/.npm
+**/.eslintcache
+
+# Build outputs
+**/dist
+**/build
+**/*.tsbuildinfo
+
+# next.js
+**/.next
+**/out
+
+# Docker
+**/.dockerignore
+
+# env files (can opt-in for committing if needed)
+**/.env*
+
+# vercel
+**/.vercel
+
+# typescript
+**/*.tsbuildinfo
+**/next-env.d.ts
+
+# Ignore Docker installers
+*.dmg
+*.pkg
+
+# OS
+**/.DS_Store
+**/.DS_Store?
+**/._*
+**/.Spotlight-V100
+**/.Trashes
+**/ehthumbs.db
+**/Thumbs.db
+
+# IDE
+**/.vscode
+**/.idea
+**/*.swp
+**/*.swo
+**/*~
+
+# Logs
+**/logs
+**/*.log
+
+# Redis
+**/dump.rdb
+
+# Temporary files
+**/*.tmp
+**/*.temp

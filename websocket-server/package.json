@@ -1,0 +1,19 @@
+{
+  "name": "websocket-server",
+  "version": "1.0.0",
+  "private": true,
+  "main": "websocket-server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/websocket-server.js",
+    "dev": "ts-node src/websocket-server.ts"
+  },
+  "dependencies": {
+    "redis": "^5.5.6",
+    "socket.io": "^4.8.1"
+  }
+}

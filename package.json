@@ -1,0 +1,19 @@
+{
+  "name": "virtual-pet-live",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "pet-bot",
+    "pet-engine", 
+    "pet-dashboard",
+    "websocket-server"
+  ],
+  "scripts": {
+    "install-all": "npm install",
+    "dev": "docker-compose up --build",
+    "clean": "rm -rf node_modules */node_modules"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}
