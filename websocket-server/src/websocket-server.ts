@@ -1,3 +1,10 @@
+/**
+ * WebSocket Server for Virtual Pet System
+ * 
+ * Bridges Redis pub/sub messages to Socket.IO clients for real-time dashboard updates.
+ * Subscribes to pet state changes and broadcasts them to connected dashboard clients.
+ */
+
 import { Server } from 'socket.io';
 import * as redis from 'redis';
 import * as http from 'http';
@@ -22,14 +29,14 @@ interface ErrorMessage {
 
 type RedisMessage = PetUpdate | ErrorMessage;
 
-// Pet state management
+// Pet state constants
 const PET_STATE_KEY = 'pet:state';
 const PET_CHANNEL = 'pet_updates';
 
-// Create HTTP server
+// Create HTTP server for Socket.IO
 const server = http.createServer();
 
-// Create Socket.IO server
+// Create Socket.IO server with CORS config
 const io = new Server(server, {
   cors: {
     origin: "*", // Adjust in production
@@ -37,19 +44,20 @@ const io = new Server(server, {
   }
 });
 
-// Create Redis subscriber
+// Redis subscriber client
 const redisSubscriber = redis.createClient({
   url: process.env.REDIS_URL || 'redis://localhost:6379'
 });
 
-// Connect to Redis
+// Connect to Redis and set up subscription
 redisSubscriber.connect().then(() => {
   console.log('Redis subscriber connected');
   
+  // Subscribe to pet updates channel
   redisSubscriber.subscribe(PET_CHANNEL, (message: string) => {
     console.log('Redis ->', message);
     
-    // Parse JSON message
+    // Parse and validate JSON message
     let parsedMessage: RedisMessage;
     try {
       parsedMessage = JSON.parse(message) as RedisMessage;
@@ -58,14 +66,14 @@ redisSubscriber.connect().then(() => {
       parsedMessage = { type: 'ERROR', message: 'Invalid JSON' };
     }
     
-    // Broadcast to all Socket.IO clients
+    // Broadcast to all connected dashboard clients
     io.emit('pet_update', parsedMessage);
   });
 }).catch((err: Error) => {
   console.error('Redis connection error:', err);
 });
 
-// Socket.IO connection handler
+// Handle Socket.IO client connections
 io.on('connection', (socket) => {
   console.log(`New dashboard client connected: ${socket.id}`);
   
@@ -74,7 +82,7 @@ io.on('connection', (socket) => {
   });
 });
 
-// Start server
+// Start the WebSocket server
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, 0, () => {
   console.log(`Socket.IO server running on port ${PORT}`);

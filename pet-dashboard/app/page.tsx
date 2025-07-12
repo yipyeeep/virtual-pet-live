@@ -1,10 +1,19 @@
+/**
+ * Virtual Pet Dashboard - Next.js App Router
+ * 
+ * Real-time dashboard displaying pet state with 2D Canvas rendering.
+ * Connects to WebSocket server for live updates and shows animated pet
+ * with activity-based behaviors, happiness stats, and event log.
+ */
+
+// pet-dashboard/app/page.tsx
 "use client";
 import { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 
 type PetState = {
   happiness: number;
-  activity: 'idle' | 'playing' | 'sleeping' | 'eating';
+  activity: 'idle' | 'playing' | 'sleeping' | 'eating' | 'loading';
   lastUpdate: number;
 };
 
@@ -16,8 +25,8 @@ type PetEvent = {
 
 export default function PetDashboard() {
   const [petState, setPetState] = useState<PetState>({
-    happiness: 50,
-    activity: 'idle',
+    happiness: 0,
+    activity: 'loading',
     lastUpdate: Date.now()
   });
   const [connectionStatus, setConnectionStatus] = useState('Disconnected');
@@ -25,17 +34,18 @@ export default function PetDashboard() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
 
-  // Socket.IO connection
+  // WebSocket connection for real-time updates
   useEffect(() => {
     const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
-  if (!wsUrl) {
-    console.error('NEXT_PUBLIC_WS_URL is not defined');
-    setConnectionStatus('Configuration Error');
-    return;
-  }
+    if (!wsUrl) {
+      console.error('NEXT_PUBLIC_WS_URL is not defined');
+      setConnectionStatus('Configuration Error');
+      return;
+    }
   
-  const socket = io(wsUrl);
+    const socket = io(wsUrl);
 
+    // Connection event handlers
     socket.on('connect', () => {
       setConnectionStatus('Connected');
       setEvents(prev => [...prev, 'Connected to pet stream']);
@@ -46,6 +56,7 @@ export default function PetDashboard() {
       setEvents(prev => [...prev, 'Disconnected from pet stream']);
     });
 
+    // Pet state update handler
     socket.on('pet_update', (data: PetEvent) => {
       if (data.type === 'PET_STATE_UPDATE' && data.state) {
         setPetState(data.state);
@@ -58,7 +69,7 @@ export default function PetDashboard() {
     }
   }, []);
 
-  // Pet rendering
+  // Canvas animation loop for pet rendering
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -69,22 +80,22 @@ export default function PetDashboard() {
     let animationTime = 0;
 
     const renderPet = () => {
-      // Clear canvas
+      // Clear canvas with background
       ctx.fillStyle = '#f0f0f0';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
       
-      // Pet body (circle)
-      const petSize = 50 + (petState.happiness / 100) * 20; // Size based on happiness
+      // Pet body - size reflects happiness level
+      const petSize = 50 + (petState.happiness / 100) * 20;
       ctx.fillStyle = getActivityColor(petState.activity);
       ctx.beginPath();
       
-      // Animation based on activity
+      // Activity-based animations
       let offsetY = 0;
       if (petState.activity === 'playing') {
-        offsetY = Math.sin(animationTime * 0.1) * 10; // Bounce
+        offsetY = Math.sin(animationTime * 0.1) * 10; // Bouncing animation
       } else if (petState.activity === 'sleeping') {
         offsetY = Math.sin(animationTime * 0.02) * 3; // Slow breathing
       }
@@ -92,13 +103,13 @@ export default function PetDashboard() {
       ctx.arc(centerX, centerY + offsetY, petSize, 0, Math.PI * 2);
       ctx.fill();
       
-      // Pet eyes
+      // Pet eyes - closed when sleeping
       ctx.fillStyle = '#000';
       const eyeSize = petState.activity === 'sleeping' ? 2 : 8;
       ctx.fillRect(centerX - 15, centerY - 10 + offsetY, eyeSize, eyeSize);
       ctx.fillRect(centerX + 7, centerY - 10 + offsetY, eyeSize, eyeSize);
       
-      // Activity indicator
+      // Activity emoji indicator
       ctx.fillStyle = '#333';
       ctx.font = '16px Arial';
       ctx.textAlign = 'center';
@@ -110,6 +121,7 @@ export default function PetDashboard() {
 
     renderPet();
 
+    // Cleanup animation frame on unmount
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -117,6 +129,9 @@ export default function PetDashboard() {
     };
   }, [petState]);
 
+  /**
+   * Get pet color based on current activity
+   */
   const getActivityColor = (activity: string): string => {
     switch (activity) {
       case 'playing': return '#4CAF50';
@@ -126,6 +141,9 @@ export default function PetDashboard() {
     }
   };
 
+  /**
+   * Get emoji representation of activity
+   */
   const getActivityEmoji = (activity: string): string => {
     switch (activity) {
       case 'playing': return '🎾';
@@ -135,6 +153,9 @@ export default function PetDashboard() {
     }
   };
 
+  /**
+   * Get happiness bar color based on level
+   */
   const getHappinessColor = (happiness: number): string => {
     if (happiness > 70) return '#4CAF50';
     if (happiness > 40) return '#FF9800';
@@ -151,7 +172,7 @@ export default function PetDashboard() {
         gap: '20px',
         marginBottom: '20px'
       }}>
-        {/* Pet Render */}
+        {/* Live Pet Visualization */}
         <div style={{ 
           border: '2px solid #ccc', 
           borderRadius: '10px', 
@@ -169,7 +190,7 @@ export default function PetDashboard() {
           </p>
         </div>
 
-        {/* Pet Stats */}
+        {/* Pet Statistics Panel */}
         <div style={{ 
           border: '2px solid #ccc', 
           borderRadius: '10px', 
@@ -190,7 +211,7 @@ export default function PetDashboard() {
             </p>
           </div>
           
-          {/* Happiness Bar */}
+          {/* Animated happiness progress bar */}
           <div style={{ 
             width: '100%', 
             height: '20px',
@@ -208,7 +229,7 @@ export default function PetDashboard() {
         </div>
       </div>
 
-      {/* Activity Log */}
+      {/* Recent Activity Log */}
       <div style={{ 
         border: '2px solid #ccc', 
         borderRadius: '10px', 
@@ -223,6 +244,7 @@ export default function PetDashboard() {
         }}>
           {events.length > 0 ? (
             <ul style={{ listStyle: 'none', padding: 0 }}>
+              {/* Show last 10 events, most recent first */}
               {events.slice(-10).reverse().map((event, i) => (
                 <li key={i} style={{ 
                   marginBottom: '5px',
