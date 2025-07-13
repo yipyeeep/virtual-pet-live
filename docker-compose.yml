@@ -17,6 +17,16 @@ services:
     depends_on:
       - redis
 
+  pet-metrics:
+    build: ./pet-metrics
+    ports:
+      - "8090:8090"
+    environment:
+      - REDIS_URL=${REDIS_URL}
+      - PORT=8090
+    depends_on:
+      - redis
+
   pet-dashboard:
     build: 
       context: ./pet-dashboard

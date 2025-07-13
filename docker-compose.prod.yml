@@ -20,3 +20,7 @@ services:
   pet-engine:
     environment:
       - NODE_ENV=production
+  
+  pet-metrics:
+    environment:
+      - NODE_ENV=production

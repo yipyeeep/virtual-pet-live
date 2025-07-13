@@ -4,6 +4,7 @@
   "private": true,
   "workspaces": [
     "pet-bot",
+    "pet-metrics",
     "pet-engine", 
     "pet-dashboard",
     "websocket-server"
